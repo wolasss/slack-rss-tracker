@@ -1,0 +1,13 @@
+{
+	"port": 1333,
+	"slack": {
+		"token": "",
+		"team": ""
+	},
+	"rss": [{
+	"name": "",
+    "url": "",
+    "channel": "",
+    "interval": 
+	}]
+}

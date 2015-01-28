@@ -3,6 +3,10 @@ var _ = require('underscore');
 var emitter;
 var feeds = [];
 
+function getRandomInt(min, max) {
+  return parseInt(Math.random() * (max - min) + min,10);
+}
+
 var check = function(feed) {
 	rsj.r2j(feed.url, function(json) {	
 		if(json) {
@@ -26,6 +30,8 @@ var check = function(feed) {
 }
 
 var register = function(feed) {
+	var interval;
+
 	if(!feed.url) {
 		throw new Error("No feed url specified");
 	}
@@ -42,9 +48,15 @@ var register = function(feed) {
 		return (f.url === feed.url)
 	})) {
 		throw new Error("Feed already being watched");
-	} 
+	}
 
-	feed.intervalId = setInterval(check, parseInt(feed.interval,10), feed);
+	if(!feed.name) {
+		throw new Error("name not provided");
+	}
+	feed.lastCheck = new Date();
+	interval = parseInt(feed.interval,10)+getRandomInt(15000, 60000);
+	feed.intervalId = setInterval(check, interval, feed);
+	check(feed);
 
 	feeds.push(feed);
 }

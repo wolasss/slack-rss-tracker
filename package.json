@@ -1,0 +1,11 @@
+{
+  "name": "slack-rss-tracker",
+  "description": "Small rss tracker with slack notifications",
+  "author": "Adam Wolski",
+  "dependencies": {
+    "restify": "^2.8.2",
+    "node-slack": "0.0.5",
+    "rsj": "0.0.4",
+    "underscore": "~1.7.0"
+  }
+}

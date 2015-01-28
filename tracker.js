@@ -6,7 +6,7 @@ var rss = require('./rss.js')(ee);
 var slack = require('./slack.js');
 
 ee.on("new", function(item, feed){
-    slack.notify(item, feed.channel, feed.name);
+    slack.notify(item, feed.channel, feed.name, feed.username);
 });
 
 if(config.rss) {

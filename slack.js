@@ -2,12 +2,11 @@ var config = require('./config.json');
 var Slack = require('node-slack');
 var slack = new Slack(config.slack.team, config.slack.token);
 
-var notify = function(item, channel, name) {
+var notify = function(item, channel, name, username) {
 
 	var attach = [];
 	var html_regex = /(<([^>]+)>)/ig;
 
-	//description
 	attach.push({
 		color: "good",
 		text: item.description.replace(html_regex, ""),
@@ -16,9 +15,9 @@ var notify = function(item, channel, name) {
 	})
 
 	slack.send({
-        text: ":mega: :mega: :mega: \n New post on *"+name+"*",
-		channel: "test",        
-    	username: "rss tracker",
+        text: "*"+name+"*",
+		channel: channel,        
+    	username: username,
     	attachments: attach,
     	mrkdwn: true
     });
