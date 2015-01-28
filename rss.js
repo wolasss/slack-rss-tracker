@@ -4,7 +4,7 @@ var emitter;
 var feeds = [];
 
 function getRandomInt(min, max) {
-  return parseInt(Math.random() * (max - min) + min,10);
+	return parseInt(Math.random() * (max - min) + min,10);
 }
 
 var check = function(feed) {
@@ -37,14 +37,19 @@ var register = function(feed) {
 	}
 
 	if(!feed.channel) {
-		throw new Error("No feed slack channel specified");
+		throw new Error("No slack channel specified");
 	}
 
 	if(!feed.interval) {
-		throw new Error("No feed interval specified");
+		throw new Error("No interval specified");
+	} else {
+		interval = parseInt(feed.interval,10);
+		if(isNaN(interval)) {
+			throw new Error("interval is not a number")
+		}
 	}
 
-	if(_.contains(feeds, function(f){
+	if(_.find(feeds, function(f){
 		return (f.url === feed.url)
 	})) {
 		throw new Error("Feed already being watched");
@@ -53,18 +58,48 @@ var register = function(feed) {
 	if(!feed.name) {
 		throw new Error("name not provided");
 	}
+
 	feed.lastCheck = new Date();
-	interval = parseInt(feed.interval,10)+getRandomInt(15000, 60000);
+	interval += getRandomInt(15000, 60000); //prevent from checking multiple feeds in the same time
 	feed.intervalId = setInterval(check, interval, feed);
 	check(feed);
 
 	feeds.push(feed);
+
+	return true;
+}
+
+var deregister = function(feed) {
+	var url, name;
+	if(!feed) {
+		throw new Error("Feed not provided");
+	}
+
+	if(feed.match(/^http/)) {
+		url = feed;
+	} else {
+		name = feed;
+	}
+
+	var found = _.find(feeds, function(f){
+		return f.url == url || f.name == name; 
+	});
+
+	if(!found) {
+		throw new Error("Cannot find provided feed");
+	} else {
+		clearInterval(found.intervalId);
+
+		feeds = _.reject(feeds, function(f){
+			return f.url == url || f.name == name;
+		});
+	}
 }
 
 module.exports = function(ee) {
     emitter = ee;
     return {
     	register: register,
-    	check: check
+    	deregister: deregister
     }
 }

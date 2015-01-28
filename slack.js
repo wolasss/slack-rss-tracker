@@ -22,6 +22,7 @@ var notify = function(item, channel, name, username) {
     	mrkdwn: true
     });
 
+	return true;
 }
 
 exports.notify = notify;
