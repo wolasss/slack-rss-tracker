@@ -66,6 +66,7 @@ var register = function(feed) {
 
 	feeds.push(feed);
 
+	emitter.emit("registered", feed.channel, feed);
 	return true;
 }
 
@@ -96,8 +97,21 @@ var deregister = function(feed) {
 	}
 }
 
+var status = function(channel) {
+	var channelFeeds = _.filter(feeds, function(f){
+		return (f.channel === channel);
+	});
+
+	emitter.emit("status", channel, channelFeeds);
+
+	return true;
+}
+
+
 module.exports = function(ee) {
     emitter = ee;
+    emitter.on("statusRequest", status);
+
     return {
     	register: register,
     	deregister: deregister
