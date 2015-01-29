@@ -20,9 +20,12 @@ server.post('/tracker', function(req, res, next){
 	var command;
 	if(commandMatch && commandMatch.length>1) {
 		command = commandMatch[1];
-
+		var fields = req.params.text.split(" ");
+		var channel = ( fields[1] ? fields[1] : req.params.channel_name);
+			
 		if(command == "status") {
-			emitter.emit("statusRequest", req.params.channel_name);
+
+			emitter.emit("statusRequest", channel);
 			res.json({});
 			return next();
 		}
@@ -30,24 +33,24 @@ server.post('/tracker', function(req, res, next){
 		if(command == "subscribe") {
 			var fields = req.params.text.split(" ");
 			
-			if(fields.length < 5) {
-				res.json({text: "rss-tracker:subscribe [name] [url] [username] [interval in ms]"});
+			if(fields.length < 6) {
+				res.json({text: "rss-tracker:subscribe [channel] [name] [url] [username] [interval in ms]"});
 				return next();
 			}
 
-			if(!fields[2].match(/^http/)) {
+			if(!fields[3].match(/^http/)) {
 				res.json({text: "error: wrong url"});
 				return next();
 			}
 
-			var interval = parseInt(fields[4], 10);
+			var interval = parseInt(fields[5], 10);
 
 			if(isNaN(interval) || interval < 1800000) {
 				res.json({text: "error: wrong interval, cannot be less than 1 800 000 ms (30min)"});
 				return next();
 			}
 
-			emitter.emit("subscriptionRequest", req.params.channel_name, fields[1], fields[2], fields[3], fields[4]);
+			emitter.emit("subscriptionRequest", fields[1], fields[2], fields[3], fields[4], fields[5]);
 			res.json({});
 			return next();
 		}
