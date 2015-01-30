@@ -8,17 +8,19 @@ function getRandomInt(min, max) {
 }
 
 var check = function(feed) {
-	rsj.r2j(feed.url, function(json) {	
+	rsj.r2j(feed.url, function(json) {
 		if(json) {
+			var arr;
+
 			try {
-				var arr = JSON.parse(json);
+				arr = JSON.parse(json);
 			} catch(e) {
 				return false;
 			}
 
 			for(var i=0, len=arr.length; i<len; i++) {
 				if(arr[i].pubDate) {
-					var feedDate = new Date(arr[i].pubDate)
+					var feedDate = new Date(arr[i].pubDate);
 					if(!feed.lastCheck || feedDate > feed.lastCheck) {
 						emitter.emit("new", arr[i], feed);
 					}
@@ -27,7 +29,7 @@ var check = function(feed) {
 			feed.lastCheck = new Date();
 		}
 	});
-}
+};
 
 var register = function(feed) {
 	var interval;
@@ -45,12 +47,12 @@ var register = function(feed) {
 	} else {
 		interval = parseInt(feed.interval,10);
 		if(isNaN(interval)) {
-			throw new Error("interval is not a number")
+			throw new Error("interval is not a number");
 		}
 	}
 
 	if(_.find(feeds, function(f){
-		return (f.url === feed.url)
+		return (f.url === feed.url);
 	})) {
 		throw new Error("Feed already being watched");
 	}
@@ -68,7 +70,7 @@ var register = function(feed) {
 
 	emitter.emit("registered", feed.channel, feed);
 	return true;
-}
+};
 
 var deregister = function(feed) {
 	var url, name;
@@ -83,7 +85,7 @@ var deregister = function(feed) {
 	}
 
 	var found = _.find(feeds, function(f){
-		return f.url == url || f.name == name; 
+		return f.url == url || f.name == name;
 	});
 
 	if(!found) {
@@ -95,9 +97,13 @@ var deregister = function(feed) {
 			return f.url == url || f.name == name;
 		});
 	}
-}
+};
 
 var status = function(channel) {
+	if(!channel) {
+		throw new Error("Channel not provided");
+	}
+
 	var channelFeeds = _.filter(feeds, function(f){
 		return (f.channel === channel);
 	});
@@ -105,7 +111,7 @@ var status = function(channel) {
 	emitter.emit("status", channel, channelFeeds);
 
 	return true;
-}
+};
 
 
 module.exports = function(ee) {
@@ -113,7 +119,7 @@ module.exports = function(ee) {
     emitter.on("statusRequest", status);
 
     return {
-    	register: register,
-    	deregister: deregister
-    }
+		register: register,
+		deregister: deregister
+    };
 }

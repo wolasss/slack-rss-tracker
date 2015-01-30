@@ -1,8 +1,6 @@
 var EventEmitter = require('events').EventEmitter;
 var ee = new EventEmitter();
-
 var rss = require("../rss.js")(ee);
-
 var assert = require("assert");
 var chai = require("chai");
 var expect = chai.expect;
@@ -15,8 +13,8 @@ describe('Register feed', function(){
 		var register = function(feed) {
 			return function() {
 				return rss.register(feed);
-			}
-		}
+			};
+		};
 
 		it('should return error when the url is not specified', function(){
 			var feed = {
@@ -81,13 +79,12 @@ describe('Register feed', function(){
 
 });
 
-
 describe('Deregister feed', function(){
 	var deregister = function(feed) {
 		return function() {
 			return rss.deregister(feed);
-		}
-	}
+		};
+	};
 
 	describe('invalid feed fields', function(){
 		it('should return error when the feed is not specified', function(){

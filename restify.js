@@ -31,8 +31,6 @@ server.post('/tracker', function(req, res, next){
 		}
 
 		if(command == "subscribe") {
-			var fields = req.params.text.split(" ");
-			
 			if(fields.length < 6) {
 				res.json({text: "rss-tracker:subscribe [channel] [name] [url] [username] [interval in ms]"});
 				return next();
@@ -54,7 +52,7 @@ server.post('/tracker', function(req, res, next){
 			res.json({});
 			return next();
 		}
-	} 
+	}
 
 	res.json({text: 'command is unknown'});
 	return next();
@@ -68,4 +66,4 @@ server.listen(port, function(){
 
 module.exports = function(ee) {
     emitter = ee;
-}
+};
