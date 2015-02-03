@@ -1,7 +1,9 @@
 var rsj = require('rsj');
+var fs = require('fs');
 var _ = require('underscore');
 var emitter;
 var feeds = [];
+var filename = 'feeds.json';
 
 function getRandomInt(min, max) {
 	return parseInt(Math.random() * (max - min) + min,10);
@@ -27,11 +29,17 @@ var check = function(feed) {
 				}
 			}
 			feed.lastCheck = new Date();
+
+			var feedsJSON = [];
+			_.each(feeds, function(f){
+				feedsJSON.push(_.omit(f, 'intervalId'));
+			})
+			fs.writeFileSync(filename, JSON.stringify({ rss: feedsJSON }, null, 4));
 		}
 	});
 };
 
-var register = function(feed) {
+var register = function(feed, write) {
 	var interval;
 
 	if(!feed.url) {
@@ -61,12 +69,21 @@ var register = function(feed) {
 		throw new Error("name not provided");
 	}
 
-	feed.lastCheck = new Date();
+	if(typeof feed.lastCheck === "string") {
+		feed.lastCheck = new Date(feed.lastCheck);
+	} else {
+		feed.lastCheck = new Date();
+	}
+
+	feeds.push(feed);
+
+	if(write) {
+		fs.writeFileSync(filename, JSON.stringify({ rss: feeds }, null, 4));
+	}
+
 	interval += getRandomInt(15000, 60000); //prevent from checking multiple feeds in the same time
 	feed.intervalId = setInterval(check, interval, feed);
 	check(feed);
-
-	feeds.push(feed);
 
 	emitter.emit("registered", feed.channel, feed);
 	return true;

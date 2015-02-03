@@ -1,4 +1,5 @@
 var config = require('./config.json');
+var feeds = require('./feeds.json');
 var _ = require("underscore");
 var EventEmitter = require('events').EventEmitter;
 var ee = new EventEmitter();
@@ -24,15 +25,14 @@ ee.on("subscriptionRequest", function(channel, name, url, username, interval){
 		channel: channel,
 		name: name,
 		url: url,
-		username: username,
 		interval: interval
-	}
+	};
 
-	rss.register(feed);
+	rss.register(feed, true);
 });
 
-if(config.rss) {
-    _.each(config.rss, function(feed){
+if(feeds.rss) {
+    _.each(feeds.rss, function(feed){
         rss.register(feed);
     });
 }

@@ -4,12 +4,12 @@ var dateFormat = require('dateformat');
 var Slack = require('node-slack');
 var slack = new Slack(config.slack.team, config.slack.token_in);
 
-var send = function(text, channel, username, attachments) {
+var send = function(text, channel, attachments) {
 
 	slack.send({
 		text: text,
 		channel: channel,
-		username: username,
+		username: "rss-tracker",
 		attachments: attachments,
 		mrkdwn: true
 	});
@@ -17,10 +17,10 @@ var send = function(text, channel, username, attachments) {
 	return true;
 };
 
-var notify = function(item, channel, name, username) {
+var notify = function(item, channel, name) {
 	var html_regex = /(<([^>]+)>)/ig;
 
-	send("*"+name+"*", channel, username, [{
+	send("*"+name+"*", channel, [{
 		color: "good",
 		text: item.description.replace(html_regex, ""),
 		title: item.title,
@@ -32,7 +32,7 @@ var notify = function(item, channel, name, username) {
 
 var registered = function(channel, feed) {
 
-	send("Registered *"+feed.name+"*", channel, feed.username, [{
+	send("Registered *"+feed.name+"*", channel, [{
 		color: "good",
 		title: feed.name,
 		title_link: feed.url
@@ -54,7 +54,7 @@ var status = function(channel, feeds) {
 		});
 	});
 
-	send("Status for channel *"+channel+"*", channel, "rss-tracker", attachs);
+	send("Status for channel *"+channel+"*", channel, attachs);
 
 	return true;
 };

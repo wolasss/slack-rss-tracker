@@ -4,6 +4,10 @@ var config  = require('./config.json');
 var server = restify.createServer({
 	name: "Slack rss tracker"
 });
+var fs = require('fs');
+var filename = 'feeds.json';
+
+
 
 var port = parseInt(config.port,10);
 
