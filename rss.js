@@ -78,7 +78,11 @@ var register = function(feed, write) {
 	feeds.push(feed);
 
 	if(write) {
-		fs.writeFileSync(filename, JSON.stringify({ rss: feeds }, null, 4));
+		var feedsJSON = [];
+		_.each(feeds, function(f){
+			feedsJSON.push(_.omit(f, 'intervalId'));
+		})
+		fs.writeFileSync(filename, JSON.stringify({ rss: feedsJSON }, null, 4));
 	}
 
 	interval += getRandomInt(15000, 60000); //prevent from checking multiple feeds in the same time

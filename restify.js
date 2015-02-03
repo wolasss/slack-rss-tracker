@@ -39,7 +39,9 @@ server.post('/tracker', function(req, res, next){
 				res.json({text: "rss-tracker:subscribe [channel] [name] [url] [interval in min]"});
 				return next();
 			} else {
-				if(!fields[3].match(/^\<?(http)\>?/)) {
+				var url = fields[3].match(/^\<?(http[^>]+)/);
+
+				if(!url) {
 					res.json({text: "error: wrong url"});
 					return next();
 				}
@@ -51,7 +53,7 @@ server.post('/tracker', function(req, res, next){
 					return next();
 				}
 
-				emitter.emit("subscriptionRequest", fields[1], fields[2], fields[3], interval*60000);
+				emitter.emit("subscriptionRequest", fields[1], fields[2], url[1], interval*60000);
 				res.json({});
 				return next();
 			}
