@@ -35,26 +35,26 @@ server.post('/tracker', function(req, res, next){
 		}
 
 		if(command == "subscribe") {
-			if(fields.length < 6) {
-				res.json({text: "rss-tracker:subscribe [channel] [name] [url] [username] [interval in ms]"});
+			if(fields.length < 5) {
+				res.json({text: "rss-tracker:subscribe [channel] [name] [url] [interval in min]"});
+				return next();
+			} else {
+				if(!fields[3].match(/^\<?(http)\>?/)) {
+					res.json({text: "error: wrong url"});
+					return next();
+				}
+
+				var interval = parseInt(fields[4], 10);
+
+				if(isNaN(interval) || interval < 30) {
+					res.json({text: "error: wrong interval, cannot be less than 30min"});
+					return next();
+				}
+
+				emitter.emit("subscriptionRequest", fields[1], fields[2], fields[3], interval*60000);
+				res.json({});
 				return next();
 			}
-
-			if(!fields[3].match(/^http/)) {
-				res.json({text: "error: wrong url"});
-				return next();
-			}
-
-			var interval = parseInt(fields[5], 10);
-
-			if(isNaN(interval) || interval < 1800000) {
-				res.json({text: "error: wrong interval, cannot be less than 1 800 000 ms (30min)"});
-				return next();
-			}
-
-			emitter.emit("subscriptionRequest", fields[1], fields[2], fields[3], fields[4], fields[5]);
-			res.json({});
-			return next();
 		}
 	}
 

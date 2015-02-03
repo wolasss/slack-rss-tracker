@@ -20,7 +20,7 @@ ee.on("registered", function(channel, feed){
 });
 
 
-ee.on("subscriptionRequest", function(channel, name, url, username, interval){
+ee.on("subscriptionRequest", function(channel, name, url, interval){
 	var feed = {
 		channel: channel,
 		name: name,
