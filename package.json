@@ -2,13 +2,25 @@
   "name": "slack-rss-tracker",
   "description": "Small rss tracker with slack notifications",
   "author": "Adam Wolski",
+  "repository": "https://github.com/wolasss/slack-rss-tracker",
   "dependencies": {
+    "dateformat": "~1.0.11",
+    "hapi": "^13.4.1",
+    "lodash": "^4.13.1",
+    "request": "^2.72.0",
     "restify": "~2.8.5",
-    "node-slack": "0.0.5",
-    "rsj": "0.0.4",
-    "underscore": "~1.7.0",
-    "chai": "~1.10.0",
-    "assert": "~1.3.0",
-    "dateformat": "~1.0.11"
+    "rsj": "0.0.4"
+  },
+  "devDependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.9.1",
+    "babel-preset-es2015": "^6.9.0",
+    "istanbul": "^0.4.3",
+    "mocha": "^2.5.3",
+    "mocktail": "^0.3.8",
+    "rollup-plugin-json": "^2.0.0"
+  },
+  "scripts": {
+    "build": "rollup -c"
   }
 }
