@@ -5,55 +5,41 @@ import {
     expect
 } from 'chai';
 
-describe('Registering teams', () => {
-    it('should properly register teams', () => {
-        const teams = [{
-            test: 1
-        }];
-        Commands.registerTeams(teams);
-        expect(Commands.getTeams()).to.be.equal(teams);
-    });
-
-    it('should throw an error when teams are not specified', () => {
-        expect(() => {
-            Commands.registerTeams();
-        }).to.throw();
-    });
-});
-
 describe('Registering commands', () => {
     it('should properly register command', () => {
+        var CommandsManager = new Commands([]);
         const testCommand = {
             execute: function() {}
         };
-        Commands.registerCommand('test', testCommand);
-        expect(Commands.getCommands().test).to.be.equal(testCommand);
+        CommandsManager.registerCommand('test', testCommand);
+        expect(CommandsManager.getCommands().test).to.be.equal(testCommand);
     });
 
     it('should throw an error when name or command object are not specified', () => {
         expect(() => {
-            Commands.registerCommand();
+            CommandsManager.registerCommand();
         }).to.throw();
 
         expect(() => {
-            Commands.registerCommand("test");
+            CommandsManager.registerCommand("test");
         }).to.throw();
 
         expect(() => {
-            Commands.registerCommand(null, "test");
+            CommandsManager.registerCommand(null, "test");
         }).to.throw();
     });
 });
 
 describe('Handling a command', () => {
     it('should properly call command execute method', () => {
+        var CommandsManager = new Commands([]);
         const testCommand = {
             execute: function(team, arg, cb) {
                 return cb.call(null, 1);
             }
         };
-        Commands.registerCommand('test', testCommand);
-        Commands.handleCommand('test', null, null, (res) => {
+        CommandsManager.registerCommand('test', testCommand);
+        CommandsManager.handleCommand('test', null, {}, (res) => {
             expect(res).to.be.equal(1);
         });
     });
@@ -61,9 +47,10 @@ describe('Handling a command', () => {
 
 describe('Extracting a command', () => {
     it('should properly extract a command name from a request', () => {
-        expect(Commands.extractCommand('rss-tracker:subscribe test test http://test.com/feed/ 30')).to.be.equal('subscribe');
-        expect(Commands.extractCommand('rss-tracker:subscribe test')).to.be.equal('subscribe');
-        expect(Commands.extractCommand('rss-tracker:status')).to.be.equal('status');
+        var CommandsManager = new Commands([]);
+        expect(CommandsManager.extractCommand('rss-tracker:subscribe test test http://test.com/feed/ 30')).to.be.equal('subscribe');
+        expect(CommandsManager.extractCommand('rss-tracker:subscribe test')).to.be.equal('subscribe');
+        expect(CommandsManager.extractCommand('rss-tracker:status')).to.be.equal('status');
     });
 });
 
@@ -71,28 +58,28 @@ describe('Validating a token', () => {
     it('should validate a token and return a team', () => {
         const teams = [{
             name: 'a',
-            tokenOut: 'a'
+            token: 'a'
         }, {
             name: 'b',
-            tokenOut: 'b'
+            token: 'b'
         }];
-        Commands.registerTeams(teams);
-        expect(Commands.validateToken("a")).to.be.equal(teams[0]);
-        expect(Commands.validateToken("b")).to.be.equal(teams[1]);
+        var CommandsManager = new Commands(teams);
+        expect(CommandsManager.validateToken("a")).to.be.equal(teams[0]);
+        expect(CommandsManager.validateToken("b")).to.be.equal(teams[1]);
     });
 
     it('should throw an error if token is invalid', () => {
         const teams = [{
             name: 'a',
-            tokenOut: 'a'
+            token: 'a'
         }, {
             name: 'b',
-            tokenOut: 'b'
+            token: 'b'
         }];
+        var CommandsManager = new Commands(teams);
 
-        Commands.registerTeams(teams);
         expect(() => {
-            Commands.validateToken("c");
+            CommandsManager.validateToken("c");
         }).to.throw();
     });
 });
@@ -101,10 +88,10 @@ describe('Parsing a request', () => {
     it('should parse and execute corresponding command', () => {
         const teams = [{
             name: 'a',
-            tokenOut: 'a'
+            token: 'a'
         }, {
             name: 'b',
-            tokenOut: 'b'
+            token: 'b'
         }];
 
         const testCommand = {
@@ -112,10 +99,11 @@ describe('Parsing a request', () => {
                 return cb.call(null, team, arg, 1);
             }
         };
-        Commands.registerCommand('test', testCommand);
-        Commands.registerTeams(teams);
+        var CommandsManager = new Commands(teams);
 
-        Commands.parse("a", "rss-tracker:test arg1 arg2 arg3 arg4", (team, arg, res) => {
+        CommandsManager.registerCommand('test', testCommand);
+
+        CommandsManager.parse("a", "rss-tracker:test arg1 arg2 arg3 arg4", (team, arg, res) => {
             expect(team).to.be.equal(teams[0]);
             expect(arg).to.be.a('array');
             expect(arg[0]).to.be.equal("arg1");
@@ -125,7 +113,7 @@ describe('Parsing a request', () => {
             expect(res).to.be.equal(1);
         });
 
-        Commands.parse("b", "rss-tracker:test 1", (team, arg, res) => {
+        CommandsManager.parse("b", "rss-tracker:test 1", (team, arg, res) => {
             expect(team).to.be.equal(teams[1]);
             expect(arg).to.be.a('array');
             expect(arg[0]).to.be.equal("1");
