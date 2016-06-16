@@ -30,9 +30,14 @@ class Server {
                             text: `Error: ${err.message}`
                         });
                     } else {
-                        reply({
-                            text: res
-                        });
+                        if (res !== "ok") {
+                            reply({
+                                text: res
+                            });
+                        } else {
+                            reply({});
+                        }
+
                     }
                 });
             }
