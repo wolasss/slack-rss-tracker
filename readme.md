@@ -15,7 +15,7 @@ The configuration is done via two json files, config.json and feeds.json.
 | ------------- |:-------------| ---|
 | port     | [Integer] | port on which server will run |
 | debug     | [Boolean]      | if set to true, will show logs on std output |
-| logfile     | ~[String]     | namefile, if set, will log to that file |
+| logfile     | [String]     | namefile, if set, will log to that file |
 | minInterval | [Integer]      | minimal interval that will be accepted during subscription (in min) |
 | maxNewItems     | [Integer]     | maximum new items that will be send to a channel when the feed is new |
 | teams | [Array]      | Array of teams to which notifications will be sent |

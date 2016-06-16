@@ -4,6 +4,7 @@
     "username": "rss-tracker",
     "minInterval": 30,
     "maxNewItems": 3,
+    "logfile": "",
     "teams": [{
         "token": "your slack token",
         "hook_url": "your slack url",
