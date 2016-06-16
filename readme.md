@@ -42,6 +42,7 @@ The file contains a `rss` property, which is an array of RSS objects with follow
 | channel     | [String]     | Name of the channel; For example: #general, private_channel |
 | interval | [Integer]      | check interval in ms |
 | team     | [String]     | name of the team; for now - one feed supports one team |
+| lastCheck     | ~[String]     | Date of last check, if set the app will consider items prior to that date as old and wont notify on start |
 
 # Installation
 
