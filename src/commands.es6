@@ -62,7 +62,7 @@ let Commands = class {
         if (command && _commands[command]) {
             _commands[command].execute(team, arg, cb);
         } else {
-            throw new Error("Command not known");
+            throw new Error("Command not known; try rss-tracker:help");
         }
     }
 

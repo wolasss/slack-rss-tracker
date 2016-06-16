@@ -1,10 +1,9 @@
 {
-    "rss": [
-        {
-            "name": "",
-            "url": "",
-            "channel": "",
-            "interval": 3600000
-        }
-    ]
+    "rss": [{
+        "name": "name of the feed",
+        "url": "feed utl",
+        "channel": "channel name",
+        "interval": 3600000, //in ms
+        "team": "",
+    }]
 }

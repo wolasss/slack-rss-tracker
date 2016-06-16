@@ -1,14 +1,12 @@
 {
-	"port": 1333,
-	"slack": {
-		"token_in": "incoming integration token",
-		"token_out": "outgoing integration token",
-		"team": "your slack domain"
-	},
-	"rss": [{
-	"name": "",
-    "url": "",
-    "channel": "",
-    "interval": 
-	}]
+    "port": 1333,
+    "debug": false,
+    "username": "rss-tracker",
+    "minInterval": 30,
+    "maxNewItems": 3,
+    "teams": [{
+        "token": "your slack token",
+        "hook_url": "your slack url",
+        "name": "your team name"
+    }]
 }
